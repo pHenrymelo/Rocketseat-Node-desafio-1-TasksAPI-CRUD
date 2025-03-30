@@ -30,7 +30,7 @@ export class Database {
         return data
     }
 
-    select(table, search) {
+    select(table, search, id) {
         let data = this.#database[table] ?? []
 
         if(search) {
@@ -41,7 +41,20 @@ export class Database {
             })
         }
 
+        if(id) {
+            return data.find(row => row.id === id)
+        }
+
         return data
+    }
+
+    remove(table, id) {
+        const rowIndex = this.#database[table].findIndex(row => row.id === id)
+
+        if(rowIndex > -1) {
+            this.#database[table].splice(rowIndex, 1)
+            this.#persist()
+        }
     }
 
 

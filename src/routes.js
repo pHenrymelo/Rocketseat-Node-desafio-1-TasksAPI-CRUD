@@ -25,7 +25,7 @@ export const routes = [
             const { title, description } = req.body
 
             if(!title || !description) {
-                return res.writeHead(400).end()
+                return res.writeHead(400).end(JSON.stringify({"message": "Os dados fornecidos estão incompletos, forneça titulo e descrição"}))
             }
 
             const task = {
@@ -54,7 +54,7 @@ export const routes = [
                 return res.writeHead(204).end()
             } 
 
-            return res.writeHead(404).end(JSON.stringify({"error": "task não encontrada"}))
+            return res.writeHead(404).end(JSON.stringify({"message": "task não encontrada"}))
         }
     },
     {
@@ -66,7 +66,7 @@ export const routes = [
             const { title, description} = req.body
 
             if(!title || !description) {
-                return res.writeHead(400).end()
+                return res.writeHead(400).end(JSON.stringify({"message": "Os dados fornecidos estão incompletos, forneça titulo e descrição"}))
             }
 
             if(task) {
@@ -75,7 +75,10 @@ export const routes = [
                     description
                 })
                 return res.writeHead(204).end()
-            } 
+            } else {
+                return res.writeHead(404).end(JSON.stringify({"message": "task não encontrada"}))
+            }
+            
         }
     },
     {
@@ -88,6 +91,7 @@ export const routes = [
                 database.update('tasks', id)
                 return res.writeHead(204).end()
             } 
+            return res.writeHead(404).end(JSON.stringify({"message": "task não encontrada"}))
         }
     },
 

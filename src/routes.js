@@ -9,7 +9,13 @@ export const routes = [
         method: "GET",
         path: buildRoutePath('/tasks'),
         handler: (req, res) => {
+            const { search } = req.query
+            const tasks = database.select('tasks', search ? {
+                title: search,
+                description: search
+            } : null)
             
+            return res.writeHead(200).end(JSON.stringify(tasks))
         }
     },
     {
@@ -17,7 +23,6 @@ export const routes = [
         path: buildRoutePath('/tasks'),
         handler: (req, res) => {
             const { title, description } = req.body
-
             const task = {
                 id: randomUUID(),
                 title,

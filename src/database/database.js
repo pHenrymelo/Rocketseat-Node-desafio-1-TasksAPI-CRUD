@@ -69,12 +69,19 @@ export class Database {
             if(rowIndex > -1) {
                 const actualData = this.#database[table][rowIndex]
 
-                this.#database[table][rowIndex] = {
-                    ...actualData,
-                    completed_at: new Date()
+                if(!actualData.completed_at){
+                    this.#database[table][rowIndex] = {
+                        ...actualData,
+                        completed_at: new Date()
+                    }
+                } else {
+                    this.#database[table][rowIndex] = {
+                        ...actualData,
+                        completed_at: null
+                    }
                 }
+                
                 this.#persist()
-
             }
         }
     }

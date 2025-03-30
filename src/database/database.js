@@ -62,7 +62,8 @@ export class Database {
 
         if(data) {
             if(rowIndex > -1){
-                this.#database[table][rowIndex] = {id, ...data}
+                const actualData = this.#database[table][rowIndex]
+                this.#database[table][rowIndex] = {id, ...actualData, ...data, updated_at: new Date()}
                 this.#persist()
             }
         } else {
@@ -80,7 +81,7 @@ export class Database {
                         completed_at: null
                     }
                 }
-                
+
                 this.#persist()
             }
         }

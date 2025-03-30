@@ -56,7 +56,21 @@ export const routes = [
         method: "PUT",
         path: buildRoutePath('/tasks/:id'),
         handler: (req, res) => {
-            return res.end('editar task')   
+            const { id } = req.params
+            const task = database.select('tasks', null, id)
+            const { title, description} = req.body
+
+            if(!title || !description) {
+                return res.writeHead(400).end()
+            }
+
+            if(task) {
+                database.update('tasks', id, {
+                    title,
+                    description
+                })
+                return res.writeHead(204).end()
+            } 
         }
     },
     {

@@ -57,5 +57,27 @@ export class Database {
         }
     }
 
+    update(table, id, data) {
+        const rowIndex = this.#database[table].findIndex(row => row.id === id)
+
+        if(data) {
+            if(rowIndex > -1){
+                this.#database[table][rowIndex] = {id, ...data}
+                this.#persist()
+            }
+        } else {
+            if(rowIndex > -1) {
+                const actualData = this.#database[table][rowIndex]
+
+                this.#database[table][rowIndex] = {
+                    ...actualData,
+                    completed_at: new Date()
+                }
+                this.#persist()
+
+            }
+        }
+    }
+
 
 }

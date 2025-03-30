@@ -50,8 +50,6 @@ export const routes = [
             } 
 
             return res.writeHead(404).end(JSON.stringify({"error": "task não encontrada"}))
-
-
         }
     },
     {
@@ -65,7 +63,12 @@ export const routes = [
         method: "PATCH",
         path: buildRoutePath('/tasks/:id/complete'),
         handler: (req, res) => {
-            return res.end('marcar task como concluída')
+            const { id } = req.params
+            const task = database.select('tasks', null, id)
+            if(task) {
+                database.update('tasks', id)
+                return res.writeHead(204).end()
+            } 
         }
     },
 

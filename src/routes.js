@@ -9,14 +9,27 @@ export const routes = [
         method: "GET",
         path: buildRoutePath('/tasks'),
         handler: (req, res) => {
-            return res.end('listar tasks')
+            
         }
     },
     {
         method: "POST",
         path: buildRoutePath('/tasks'),
         handler: (req, res) => {
-            return res.end('criar task')
+            const { title, description } = req.body
+
+            const task = {
+                id: randomUUID(),
+                title,
+                description,
+                completed_at: null,
+                created_at: new Date(),
+                updated_at: new Date(),
+            }
+
+            database.insert('tasks', task)
+            return res.writeHead(201).end()
+
         }
     },
     {

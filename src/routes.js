@@ -1,6 +1,8 @@
 import { buildRoutePath } from './utils/build-route-path.js'
 import { Database } from './database/database.js'
 import { randomUUID } from 'node:crypto'
+import { ImportTasksStream } from './utils/csv-import-tasks-stream.js'
+
 
 const database = new Database()
 
@@ -94,5 +96,21 @@ export const routes = [
             return res.writeHead(404).end(JSON.stringify({"message": "task não encontrada"}))
         }
     },
+    {
+        method: 'POST',
+        path: buildRoutePath('/tasks/import'),
+        handler: (req, res) => {
+            const csvFilePath = new URL('./tasks.csv', import.meta.url)
+            const importStream = new ImportTasksStream(csvFilePath)
+
+            importStream.process().then(
+                console.log("a importação foi executada")
+            ).catch( err => {
+                console.error("Erro na importação: ", err)
+            })
+
+            return res.writeHead(201).end(JSON.stringify({"message": "Arquivo CSV importado com sucesso!"}))
+        }
+    }
 
 ]

@@ -100,16 +100,22 @@ export const routes = [
         method: 'POST',
         path: buildRoutePath('/tasks/import'),
         handler: (req, res) => {
-            const csvFilePath = new URL('./tasks.csv', import.meta.url)
-            const importStream = new ImportTasksStream(csvFilePath)
 
-            importStream.process().then(
-                console.log("a importação foi executada")
-            ).catch( err => {
-                console.error("Erro na importação: ", err)
-            })
+            const {url} = req.body
 
-            return res.writeHead(201).end(JSON.stringify({"message": "Arquivo CSV importado com sucesso!"}))
+            if(url) {
+                const csvFilePath = new URL(url, import.meta.url)
+                const importStream = new ImportTasksStream(csvFilePath)
+    
+                importStream.process().then(
+                    console.log("a importação foi executada")
+                ).catch( err => {
+                    console.error("Erro na importação: ", err)
+                })
+    
+                return res.writeHead(201).end(JSON.stringify({"message": "Arquivo CSV importado com sucesso!"}))
+            }
+            return res.writeHead(404).end(JSON.stringify({"message": "task não encontrada"}))
         }
     }
 
